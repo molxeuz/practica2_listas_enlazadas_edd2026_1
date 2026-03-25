@@ -1,10 +1,15 @@
+# ================================
+# NODO PARA LISTA DOBLEMENTE ENLAZADA
+# ================================
+# Representa un vehículo dentro de la vía (cada nodo guarda un vehículo)
+
 class NodeD:
     __slots__ = ('__value', '__next', '__prev')
 
     def __init__(self, value):
-        self.__value = value
-        self.__next = None
-        self.__prev = None
+        self.__value = value      # vehículo guardado en el nodo
+        self.__next = None        # referencia al siguiente nodo
+        self.__prev = None        # referencia al nodo anterior
 
     def __str__(self):
         return str(self.__value)
@@ -15,6 +20,7 @@ class NodeD:
 
     @next.setter
     def next(self, node):
+        # valida que el siguiente sea un nodo o None
         if node is not None and not isinstance(node, NodeD):
             raise TypeError("next debe ser un objeto tipo nodo ó None")
         self.__next = node
@@ -25,6 +31,7 @@ class NodeD:
 
     @prev.setter
     def prev(self, node):
+        # valida que el anterior sea un nodo o None
         if node is not None and not isinstance(node, NodeD):
             raise TypeError("prev debe ser un objeto tipo nodo ó None")
         self.__prev = node
@@ -39,12 +46,15 @@ class NodeD:
             raise TypeError("el nuevo valor debe ser diferente de None")
         self.__value = newValue
 
+# ================================
+# LISTA DOBLEMENTE ENLAZADA (LA VIA DEL TALLER)
+# ================================
 
 class DoublyLinkedList:
     def __init__(self):
-        self.__head = None
-        self.__tail = None
-        self.__size = 0
+        self.__head = None    # primer vehículo de la vía
+        self.__tail = None    # último vehículo de la vía
+        self.__size = 0       # cantidad de vehículos
 
     @property
     def head(self):
@@ -74,20 +84,27 @@ class DoublyLinkedList:
     def size(self, num):
         self.__size = num
 
+    # Muestra la vía completa
     def __str__(self):
         result = [str(nodo.value) for nodo in self]
         return ' <--> '.join(result)
 
+    # imprime los vehículos uno por uno
     def print(self):
         for nodo in self:
             print(str(nodo.value))
 
+    # permite recorrer la lista con for
     def __iter__(self):
         current = self.__head
         while current is not None:
             yield current
             current = current.next
 
+    # ================================
+    # PUNTO 1 DEL TALLER
+    # Insertar vehículos al final de la vía
+    # ================================
     def prepend(self, value):
         newnode = NodeD(value)
         if self.__head is None:
@@ -110,6 +127,9 @@ class DoublyLinkedList:
             self.__tail = newnode
         self.__size += 1
 
+# ================================
+# NODO PARA LISTA ENLAZADA SIMPLE (USADA POR LA COLA)
+# ================================
 
 class Node:
     __slots__ = ('__value', '__next')
@@ -141,6 +161,9 @@ class Node:
             raise TypeError("el nuevo valor debe ser diferente de None")
         self.__value = newValue
 
+# ================================
+# LISTA ENLAZADA SIMPLE (USADA INTERNAMENTE POR LA COLA)
+# ================================
 
 class LinkedList:
     def __init__(self):
@@ -215,6 +238,9 @@ class LinkedList:
         tempNode.next = None
         return tempNode
 
+# ================================
+# COLA (USADA EN EL PUNTO 7 - SEMÁFORO)
+# ================================
 
 class Queue:
     def __init__(self):
@@ -244,6 +270,9 @@ class Queue:
         result = [str(nodo.value) for nodo in self.__queue]
         return ' -- '.join(result)
 
+# ================================
+# CLASE VEHICULO (LO QUE GUARDA LA VIA)
+# ================================
 
 class Vehiculo:
     def __init__(self, placa, tipo, prioridad):
@@ -254,6 +283,10 @@ class Vehiculo:
     def __str__(self):
         return f"{self.placa} {self.tipo} {self.prioridad}"
 
+# ================================
+# PUNTO 2 DEL TALLER
+# Paso preferencial: mover motos prioridad 1 al frente
+# ================================
 
 def paso_preferencial(via):
     ultimo_movido = None
@@ -291,6 +324,10 @@ def paso_preferencial(via):
 
         nodo = siguiente
 
+# ================================
+# PUNTO 3 DEL TALLER
+# Eliminar camiones con prioridad mayor a 3
+# ================================
 
 def eliminar_camiones(via):
     nodo = via.head
@@ -317,6 +354,10 @@ def eliminar_camiones(via):
 
         nodo = siguiente
 
+# ================================
+# PUNTO 4 DEL TALLER
+# Accidente entre dos placas
+# ================================
 
 def accidente(via, placa1, placa2):
     nodo = via.head
@@ -353,6 +394,10 @@ def accidente(via, placa1, placa2):
         actual.next.prev = actual.prev
         actual = siguiente
 
+# ================================
+# PUNTO 5 DEL TALLER
+# Invertir la vía solo si hay más autos que motos
+# ================================
 
 def invertir_via(via):
     autos = 0
@@ -378,6 +423,10 @@ def invertir_via(via):
 
     via.head, via.tail = via.tail, via.head
 
+# ================================
+# PUNTO 6 DEL TALLER
+# Reorganizar la vía por prioridad
+# ================================
 
 def reorganizar_via(via):
     nueva_head = None
@@ -415,6 +464,10 @@ def reorganizar_via(via):
     via.head = nueva_head
     via.tail = nueva_tail
 
+# ================================
+# PUNTO 7 DEL TALLER
+# Simulación de semáforo usando dos colas
+# ================================
 
 def simular_semaforo(via):
     def eliminar_de_via(placa):
@@ -511,10 +564,16 @@ def simular_semaforo(via):
 
     print("\n--- FIN ---\n")
 
+# ================================
+# MAIN (EJECUTA TODOS LOS PUNTOS DEL TALLER)
+# ================================
 
 def main():
     via = DoublyLinkedList()
 
+    # ================================
+    # CARGA INICIAL DE VEHÍCULOS
+    # ================================
     via.append(Vehiculo("AAA111", "auto", 3))
     via.append(Vehiculo("BBB222", "moto", 1))
     via.append(Vehiculo("CCC333", "camion", 4))
@@ -526,37 +585,73 @@ def main():
     via.append(Vehiculo("RRR888", "camion", 4))
     via.append(Vehiculo("XXX000", "auto", 2))
 
-    print("Via original:\n")
+    print("\n" + "="*60)
+    print("ESTADO INICIAL DE LA VÍA")
+    print("="*60 + "\n")
     print(via)
-    print("\n")
+
+    # ================================
+    # PUNTO 2 - PASO PREFERENCIAL
+    # ================================
+    print("\n" + "="*60)
+    print("PUNTO 2 - PASO PREFERENCIAL (MOTOS PRIORIDAD 1)")
+    print("="*60 + "\n")
 
     paso_preferencial(via)
-    print("Via después del paso preferencial:\n")
+    print("Resultado:\n")
     print(via)
-    print("\n")
+
+    # ================================
+    # PUNTO 3 - ELIMINAR CAMIONES
+    # ================================
+    print("\n" + "="*60)
+    print("PUNTO 3 - ELIMINAR CAMIONES CON PRIORIDAD MAYOR A 3")
+    print("="*60 + "\n")
 
     eliminar_camiones(via)
-    print("Via después de eliminar camiones:\n")
+    print("Resultado:\n")
     print(via)
-    print("\n")
+
+    # ================================
+    # PUNTO 4 - ACCIDENTE ENTRE DOS PLACAS
+    # ================================
+    print("\n" + "="*60)
+    print("PUNTO 4 - ACCIDENTE ENTRE DDD444 Y XXX000")
+    print("="*60 + "\n")
 
     accidente(via, "DDD444", "XXX000")
-    print("Via después del accidente entre DDD444 y XXX000:\n")
+    print("Resultado:\n")
     print(via)
-    print("\n")
+
+    # ================================
+    # PUNTO 5 - INVERTIR LA VÍA
+    # ================================
+    print("\n" + "="*60)
+    print("PUNTO 5 - INVERTIR LA VÍA (SI HAY MÁS AUTOS QUE MOTOS)")
+    print("="*60 + "\n")
 
     invertir_via(via)
-    print("Via después de invertir:\n")
+    print("Resultado:\n")
     print(via)
-    print("\n")
+
+    # ================================
+    # PUNTO 6 - REORGANIZAR POR PRIORIDAD
+    # ================================
+    print("\n" + "="*60)
+    print("PUNTO 6 - REORGANIZAR LA VÍA POR PRIORIDAD")
+    print("="*60 + "\n")
 
     reorganizar_via(via)
-    print("Via después de reorganizar por prioridad:\n")
+    print("Resultado:\n")
     print(via)
-    print("\n")
 
-    print("SIMULACIÓN SEMÁFORO:\n")
+    # ================================
+    # PUNTO 7 - SIMULACIÓN DEL SEMÁFORO
+    # ================================
+    print("\n" + "="*60)
+    print("PUNTO 7 - SIMULACIÓN DEL SEMÁFORO")
+    print("="*60)
+
     simular_semaforo(via)
-
 
 main()
