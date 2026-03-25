@@ -6,7 +6,6 @@
 #   - Cola (para el punto 7)
 # ==============================================================
 
-
 # ==============================================================
 # NODO PARA LISTA DOBLEMENTE ENLAZADA
 # Guarda un vehículo y los enlaces al nodo anterior y siguiente
@@ -16,7 +15,6 @@ class NodeD:
         self.value = value
         self.next = None
         self.prev = None
-
 
 # ==============================================================
 # LISTA DOBLEMENTE ENLAZADA (LA VÍA PRINCIPAL)
@@ -54,7 +52,6 @@ class DoublyLinkedList:
 
         return result
 
-
 # ==============================================================
 # COLA (USADA EN EL PUNTO 7)
 # ==============================================================
@@ -85,7 +82,6 @@ class Queue:
     def length(self):
         return self.list.size
 
-
 # ==============================================================
 # CLASE VEHÍCULO
 # ==============================================================
@@ -97,7 +93,6 @@ class Vehiculo:
 
     def __str__(self):
         return f"{self.placa} {self.tipo} {self.prioridad}"
-
 
 # ==============================================================
 # PUNTO 2: PASO PREFERENCIAL (motos prioridad 1 al frente)
@@ -144,7 +139,6 @@ def paso_preferencial(via):
 
         current = next_node
 
-
 # ==============================================================
 # PUNTO 3: ELIMINAR CAMIONES PRIORIDAD > 3
 # ==============================================================
@@ -173,7 +167,6 @@ def eliminar_camiones(via):
 
         current = next_node
 
-
 # ==============================================================
 # PUNTO 4: ACCIDENTE ENTRE DOS PLACAS
 # ==============================================================
@@ -199,7 +192,6 @@ def accidente(via, placa1, placa2):
         actual.prev.next = actual.next
         actual.next.prev = actual.prev
         actual = next_node
-
 
 # ==============================================================
 # PUNTO 5: INVERTIR SOLO SI HAY MÁS AUTOS QUE MOTOS
@@ -227,7 +219,6 @@ def invertir_via(via):
         current = current.prev
 
     via.head, via.tail = via.tail, via.head
-
 
 # ==============================================================
 # PUNTO 6: REORGANIZAR POR PRIORIDAD (1 a 5)
@@ -271,7 +262,6 @@ def reorganizar_via(via):
     via.head = new_head
     via.tail = new_tail
 
-
 # ==============================================================
 # PUNTO 7: SIMULACIÓN DEL SEMÁFORO
 # ==============================================================
@@ -305,10 +295,10 @@ def simular_semaforo(via):
 
     print("\n--- FIN SEMÁFORO ---\n")
 
-
 # ==============================================================
 # MAIN (ejecuta todo automáticamente como pide el taller)
 # ==============================================================
+
 def main():
     via = DoublyLinkedList()
 
@@ -347,6 +337,5 @@ def main():
     print(via)
 
     simular_semaforo(via)
-
 
 main()
