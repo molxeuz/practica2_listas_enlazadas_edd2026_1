@@ -271,30 +271,65 @@ def simular_semaforo(via):
 
     current = via.head
 
-    # meter los primeros 6 vehículos en la cola
-    for _ in range(6):
-        if current:
-            colaSemaforo.enqueue(current.value)
-            current = current.next
+    # meter los primeros 6 vehículos
+    count = 0
+    while current and count < 6:
+        current.value.revisado = False  # marcar si ya fue revisado
+        colaSemaforo.enqueue(current.value)
+        current = current.next
+        count += 1
 
     tiempo = 0
     pasaron = 0
 
+    tipo_anterior = None
+    consecutivos = 0
+
     print("\n--- INICIO SEMÁFORO ---\n")
 
     while pasaron < 6 and not colaSemaforo.is_empty():
+
         v = colaSemaforo.dequeue()
 
-        if v.tipo == "camion" and v.prioridad > 3:
+        # REGLA 1: evitar 3 del mismo tipo seguidos
+        if tipo_anterior == v.tipo:
+            consecutivos += 1
+        else:
+            consecutivos = 1
+
+        if consecutivos > 2:
+            print(f"{tiempo}s - {v.placa} POSPUESTO")
+            colaSemaforo.enqueue(v)
+            consecutivos -= 1
+            continue
+
+        # REGLA 2: enviar a revisión
+        if v.tipo == "camion" and v.prioridad > 3 and not v.revisado:
             print(f"{tiempo}s - {v.placa} enviado a revisión")
+            v.revisado = True
             colaRevision.enqueue(v)
         else:
             print(f"{tiempo}s - {v.placa} PASA")
             pasaron += 1
             tiempo += 30
 
-    print("\n--- FIN SEMÁFORO ---\n")
+            # REGLA 3: motos prioridad 1 pasan doble
+            if v.tipo == "moto" and v.prioridad == 1 and not colaSemaforo.is_empty():
+                extra = colaSemaforo.dequeue()
+                print(f"{tiempo}s - {extra.placa} PASA (extra por moto)")
+                pasaron += 1
 
+        tipo_anterior = v.tipo
+
+        # REGLA 4: procesar revisión si hay 3
+        if colaRevision.length() >= 3:
+            print("\n--- PROCESANDO REVISIÓN ---\n")
+            while not colaRevision.is_empty():
+                revisado = colaRevision.dequeue()
+                colaSemaforo.enqueue(revisado)
+
+    print("\n--- FIN SEMÁFORO ---\n")
+# =========================================
 # ==============================================================
 # MAIN (ejecuta todo automáticamente como pide el taller)
 # ==============================================================
